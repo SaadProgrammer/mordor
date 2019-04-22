@@ -2,7 +2,6 @@ package com.example.mordor.service;
 
 import com.example.mordor.model.postacie.*;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 /**
@@ -10,6 +9,7 @@ import java.util.*;
  */
 
 @Service
+
 public class TworzeniePostaciService {
 
     public static int losuj(int minimum, int maximum) {
@@ -19,25 +19,31 @@ public class TworzeniePostaciService {
 
     Istota stworzPostac(TypPostaciEnum typPostaci) {
         Istota nowaPostac;
-            if (typPostaci.equals(TypPostaciEnum.KORPOLUDEK)) {
-                nowaPostac = new Korpoludek();
-            } else if (typPostaci.equals(TypPostaciEnum.MANAGER)) {
-                nowaPostac = new Manager();
-            } else if (typPostaci.equals(TypPostaciEnum.OCHRONIARZ)) {
-                nowaPostac = new Ochroniarz();
-            } else if (typPostaci.equals(TypPostaciEnum.PANKANAPKA)) {
-                nowaPostac = new PanKanapka();
-            } else if (typPostaci.equals(TypPostaciEnum.RECEPCJONISTKA)) {
-                nowaPostac = new Recepcjonistka();
-            } else if (typPostaci.equals(TypPostaciEnum.SPRZATACZKA)) {
-                nowaPostac = new Sprzataczka();
-            } else {
-                nowaPostac = null;
-            }
-            if (Objects.nonNull(nowaPostac)) {
-                nowaPostac.setName(typPostaci.name());
-                nowaPostac.setIdPostaci(UUID.randomUUID().toString());
-                System.out.println("Nowa postac to: " + nowaPostac.toString());
+        if (typPostaci.equals(TypPostaciEnum.KORPOLUDEK)) {
+            nowaPostac = new Korpoludek();
+        } else if (typPostaci.equals(TypPostaciEnum.MANAGER)) {
+            nowaPostac = new Manager();
+        } else if (typPostaci.equals(TypPostaciEnum.OCHRONIARZ)) {
+            nowaPostac = new Ochroniarz();
+        } else if (typPostaci.equals(TypPostaciEnum.PANKANAPKA)) {
+            nowaPostac = new PanKanapka();
+        } else if (typPostaci.equals(TypPostaciEnum.RECEPCJONISTKA)) {
+            nowaPostac = new Recepcjonistka();
+        } else if (typPostaci.equals(TypPostaciEnum.SPRZATACZKA)) {
+            nowaPostac = new Sprzataczka();
+        } else if (typPostaci.equals(TypPostaciEnum.PREZES)) {
+            nowaPostac = new Prezes();
+        } else
+
+        {
+            nowaPostac = null;
+        }
+        if (Objects.nonNull(nowaPostac))
+
+        {
+            nowaPostac.setName(typPostaci.name());
+            nowaPostac.setIdPostaci(UUID.randomUUID().toString());
+            System.out.println("Nowa postac to: " + nowaPostac.toString());
         }
         return nowaPostac;
     }

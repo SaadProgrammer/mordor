@@ -7,9 +7,9 @@ import com.example.mordor.service.TworzeniePostaciService;
  */
 
 
-public class PanKanapka extends Istota {
+public class PanKanapka extends Humanoid {
 
     public PanKanapka() {
-        super(TworzeniePostaciService.losuj(5, 8), TworzeniePostaciService.losuj(4, 7), TworzeniePostaciService.losuj(3, 6), TworzeniePostaciService.losuj(7, 10));
+        super(TworzeniePostaciService.losuj(5, 8), TworzeniePostaciService.losuj(4, 7), TworzeniePostaciService.losuj(3, 6), TworzeniePostaciService.losuj(7, 10), TypPostaciEnum.PANKANAPKA, 11);
     }
 }

@@ -3,6 +3,7 @@ package com.example.mordor.model.postacie;
 /**
  * Created by Saad on 2019-02-24.
  */
+
 public enum TypPostaciEnum {
 
     KORPOLUDEK,
@@ -10,5 +11,6 @@ public enum TypPostaciEnum {
     RECEPCJONISTKA,
     SPRZATACZKA,
     PANKANAPKA,
-    OCHRONIARZ;
+    OCHRONIARZ,
+    PREZES;
 }

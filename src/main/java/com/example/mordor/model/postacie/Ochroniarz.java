@@ -7,9 +7,9 @@ import com.example.mordor.service.TworzeniePostaciService;
  */
 
 
-public class Ochroniarz extends Istota {
+public class Ochroniarz extends Humanoid {
 
     public Ochroniarz() {
-        super(TworzeniePostaciService.losuj(6, 9), TworzeniePostaciService.losuj(4, 7), TworzeniePostaciService.losuj(3, 6), TworzeniePostaciService.losuj(3, 6));
+        super(TworzeniePostaciService.losuj(6, 9), TworzeniePostaciService.losuj(4, 7), TworzeniePostaciService.losuj(3, 6), TworzeniePostaciService.losuj(3, 6), TypPostaciEnum.OCHRONIARZ, 13);
     }
 }
