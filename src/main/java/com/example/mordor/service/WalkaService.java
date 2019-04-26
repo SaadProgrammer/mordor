@@ -59,7 +59,7 @@ public class WalkaService {
     public Istota losowanieWalczaka(List<Istota> listaWalczakow) {
         Integer indexWalczak = TworzeniePostaciService.losuj(0, listaWalczakow.size() - 1);
         Istota walczak = listaWalczakow.get(indexWalczak);
-        listaWalczakow.remove(indexWalczak);
+        listaWalczakow.remove(walczak);
         return walczak;
     }
 
@@ -79,18 +79,22 @@ public class WalkaService {
     }
 
     public void rundaWalki(Istota atakujacy, Istota ofiara) {
-        while (atakujacy.getIloscAtakow() > 0 && ofiara.getIloscAtakow() > 0) {
-            if (atakujacy.getPunktyKorpoZycia() > 0 && ofiara.getPunktyKorpoZycia() > 0) {
-                atakujacy.atak(ofiara);
-                //LICZNIK WALK - ATAKUJACY
-            } else {
-                System.out.println("Jedna z postaci nie żyje, runda walki nie jest możliwa");
-            }
-            if (ofiara.getPunktyKorpoZycia() > 0) {
-                ofiara.atak(atakujacy);
-                //LICZNIK WALK - OFIARA
-            } else {
-                System.out.println("Jedna z postaci nie żyje, runda walki nie jest możliwa");
+        if (atakujacy.getIdPostaci().equals(ofiara.getIdPostaci())) {
+            System.out.println("Postać " + atakujacy.getName() + " nie może sam siebie zaatakować");
+        } else {
+            while (atakujacy.getIloscAtakow() > 0 && ofiara.getIloscAtakow() > 0) {
+                if (atakujacy.getPunktyKorpoZycia() > 0 && ofiara.getPunktyKorpoZycia() > 0) {
+                    atakujacy.atak(ofiara);
+                    //LICZNIK WALK - ATAKUJACY
+                } else {
+                    System.out.println("Jedna z postaci zrezygnowała z pracyy, runda walki nie jest możliwa");
+                }
+                if (ofiara.getPunktyKorpoZycia() > 0) {
+                    ofiara.atak(atakujacy);
+                    //LICZNIK WALK - OFIARA
+                } else {
+                    System.out.println("Postać " + ofiara.getName() + " zrezygnowała z pracy przed końcem rundy walki");
+                }
             }
         }
         atakujacy.resetiloscAtakowUnikow();

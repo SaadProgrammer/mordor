@@ -36,13 +36,14 @@ public abstract class Istota implements FunkcjeIstoty {
 
     @Override
     public String toString() {
-        return "Name: " + getName() + " Sila: " + getSila() + " Wytrzymalosc: " + getWytrzymalosc() + " Spryt: " + getSpryt() + " Szybkosc: " +
-                getSzybkosc() + " Typ postaci: " + getTypPostaci() + " Punkty KorpoZycia: " + getPunktyKorpoZycia() + " IdPostaci: " + getIdPostaci();
+        return "Name: " + getName() + " Sila: " + getSila() + " Wytrzymalosc: " + getWytrzymalosc() + " Spryt: " + getSpryt() + " Szybkosc: " + getSzybkosc()
+                + " Typ postaci: " + getTypPostaci() + " Punkty KorpoZycia: " + getPunktyKorpoZycia() + " Ilość ataków: " + getIloscAtakow()
+                + " Ilość uników: " + getIloscUnikow() + " IdPostaci: " + getIdPostaci();
     }
 
     public void nowePunktyKorpoZycia(Integer punktyDoOdjecia) {
         setPunktyKorpoZycia(getPunktyKorpoZycia() - punktyDoOdjecia);
-        if (getPunktyKorpoZycia() > 0) {
+        if (getPunktyKorpoZycia() < 0) {
             setPunktyKorpoZycia(0);
         }
     }
@@ -69,11 +70,12 @@ public abstract class Istota implements FunkcjeIstoty {
     }
 
     public Integer rezultatAtaku(Istota ofiara) {
-        Integer sumaPotencjalnychObrazen = (getSzybkosc()/2) + getSila();
+        Integer sumaPotencjalnychObrazen = (getSzybkosc() / 2) + getSila();
         Integer wynikAtaku = sumaPotencjalnychObrazen - ofiara.getWytrzymalosc();
         if (wynikAtaku > 0) {
             ofiara.nowePunktyKorpoZycia(wynikAtaku);
-            System.out.println("Postaci " + getName() + " udało się zaatakować " + ofiara.getName() + " w wyniku czego ta straciła " + wynikAtaku + " punktów korpo życia");
+            System.out.println("Postaci " + getName() + " udało się zaatakować. Postać " + ofiara.getName() + " straciła "
+                    + wynikAtaku + " punktów korpo życia i ma ich teraz " + ofiara.getPunktyKorpoZycia());
         } else {
             System.out.println("Atak przeprowadzony przez " + getName() + "zakończył się niepowodzeniem");
         }
@@ -115,13 +117,13 @@ public abstract class Istota implements FunkcjeIstoty {
     @Override
     public void unik(Istota atakujacy) {
         if (getIloscUnikow() != 0) {
-            if (getSzybkosc() >= TworzeniePostaciService.losuj(5, 8)) {
+            if (getSzybkosc() >= TworzeniePostaciService.losuj(4, 8)) {
                 System.out.println("Postaci " + getName() + " udało się uniknąć ataku ze strony " + atakujacy.getName());
                 redukcjaIloscUnikow();
             } else {
                 System.out.println("Postaci " + getName() + " nie udało się uniknąć ataktu ze strony " + atakujacy.getName());
                 redukcjaIloscUnikow();
-                rezultatAtaku(this);
+                atakujacy.rezultatAtaku(this);
             }
         } else {
             System.out.println("Postać " + getName() + " nie ma uników");

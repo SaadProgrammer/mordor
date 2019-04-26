@@ -25,8 +25,9 @@ public class MordorApplication {
         WalkaService ws = new WalkaService();
         ws.walkaOstatniZywy(lista);
 
-       /* ws.globalKorpoFight(1, 4);
+        //POWYŻSZE DZIAŁA, ALE JEŚLI CHCE JUŻ ZROBIĆ BARDZIEJ GLOBALNIE Z LISTĄ TO NIE - PONIŻEJ (OBIE FUNKCJE W WALKA SERVICE
+
+        /*ws.globalKorpoFight(1, 2);
         ws.globalKorpoWinner(ws.korpoWinnerList);*/
     }
-
 }

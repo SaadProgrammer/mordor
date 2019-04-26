@@ -28,14 +28,14 @@ public abstract class Humanoid extends Istota implements FunkcjeHumanoida {
     public void atak(Istota ofiara) {
         Integer indexAtaku = TworzeniePostaciService.losuj(0, 100);
         if (indexAtaku <= RodzajeAtakówEnum.DONIES.getMaxWart()) {
-            donies(ofiara);
             System.out.println("Postać " + getName() + " wybrała donosicielstwo");
+            donies(ofiara);
         } else if (indexAtaku >= RodzajeAtakówEnum.OBLEJ_KAWA.getMinWart() && indexAtaku <= RodzajeAtakówEnum.OBLEJ_KAWA.getMaxWart()) {
-            oblejKawa(ofiara);
             System.out.println("Postać " + getName() + " wybrała oblewanie kawą");
+            oblejKawa(ofiara);
         } else if (indexAtaku >= RodzajeAtakówEnum.ZEPCHNIJ_ZE_SCHODOW.getMinWart()) {
-            zepchnijZeSchodow(ofiara);
             System.out.println("Postać " + getName() + " wybrała zepchnięcie ze schodów");
+            zepchnijZeSchodow(ofiara);
         } else {
             System.out.println("Postać " + getName() + " nie może wybrać rzadnego ataku");
         }

@@ -51,7 +51,7 @@ public class TworzeniePostaciService {
     Istota stworzDowolnaPostac() {
         Istota nowaPostac;
         List<TypPostaciEnum> listaTypowPostaci = Arrays.asList(TypPostaciEnum.values());
-        Integer indexTwrzonejPostaci = losuj(0, listaTypowPostaci.size());
+        Integer indexTwrzonejPostaci = losuj(0, listaTypowPostaci.size()-1);
         TypPostaciEnum dowolnaPostac = listaTypowPostaci.get(indexTwrzonejPostaci);
         nowaPostac = stworzPostac(dowolnaPostac);
         return nowaPostac;

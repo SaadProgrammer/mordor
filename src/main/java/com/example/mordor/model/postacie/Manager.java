@@ -10,7 +10,7 @@ import com.example.mordor.service.TworzeniePostaciService;
 public class Manager extends Humanoid {
 
     public Manager() {
-        super(TworzeniePostaciService.losuj(4, 7), TworzeniePostaciService.losuj(3, 6), TworzeniePostaciService.losuj(6, 9), TworzeniePostaciService.losuj(5, 8), TypPostaciEnum.MANAGER, 11);
+        super(TworzeniePostaciService.losuj(4, 7), TworzeniePostaciService.losuj(3, 6), TworzeniePostaciService.losuj(6, 9), TworzeniePostaciService.losuj(4, 7), TypPostaciEnum.MANAGER, 11);
     }
 
 }
