@@ -20,14 +20,16 @@ public class MordorApplication {
     public static void main(String[] args) {
 
         TworzeniePostaciService tps = new TworzeniePostaciService();
-        List<Istota> lista = tps.stworzWieleDowolnychPostaci(2);
-
         WalkaService ws = new WalkaService();
-        ws.walkaOstatniZywy(lista);
+
+        List<Istota> korpoSzczury = tps.stworzWieleDowolnychPostaci(5);
+        ws.korpoWinner(korpoSzczury);
 
         //POWYŻSZE DZIAŁA, ALE JEŚLI CHCE JUŻ ZROBIĆ BARDZIEJ GLOBALNIE Z LISTĄ TO NIE - PONIŻEJ (OBIE FUNKCJE W WALKA SERVICE
+        //PROBLEM Z KORPOWINNER LISTĄ
 
-        /*ws.globalKorpoFight(1, 2);
-        ws.globalKorpoWinner(ws.korpoWinnerList);*/
+        /*ws.globalKorpoWinner(ws.globalKorpoFight(2,4));*/
+
+
     }
 }

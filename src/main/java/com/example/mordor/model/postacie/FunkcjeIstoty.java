@@ -7,7 +7,7 @@ public interface FunkcjeIstoty {
 
     public void donies (Istota ofiara);
     public void oblejKawa (Istota ofiara);
-    public void unik(Istota atakujacy);
+    public void unik(Istota atakujacy, Integer potencjalneObrazeniaZalezneOdRodzajuAtaku);
     public void atak(Istota ofiara);
 
 }

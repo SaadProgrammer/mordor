@@ -29,19 +29,78 @@ public abstract class Istota implements FunkcjeIstoty {
     private TypPostaciEnum typPostaci;
     private Integer punktyKorpoZycia;
 
-    private String idPostaci;
     private String name;
     private Integer iloscAtakow = 1;
     private Integer iloscUnikow = 1;
+    private Integer punktyDoswiadczenia = 0;
+    private Integer wygraneWalki = 0;
+    private String idPostaci;
+
 
     @Override
     public String toString() {
         return "Name: " + getName() + " Sila: " + getSila() + " Wytrzymalosc: " + getWytrzymalosc() + " Spryt: " + getSpryt() + " Szybkosc: " + getSzybkosc()
                 + " Typ postaci: " + getTypPostaci() + " Punkty KorpoZycia: " + getPunktyKorpoZycia() + " Ilość ataków: " + getIloscAtakow()
-                + " Ilość uników: " + getIloscUnikow() + " IdPostaci: " + getIdPostaci();
+                + " Ilość uników: " + getIloscUnikow() + " Doswiadczenie: " + getPunktyDoswiadczenia() + " Wygrane walki: " + getWygraneWalki()
+                + " IdPostaci: " + getIdPostaci();
     }
 
-    public void nowePunktyKorpoZycia(Integer punktyDoOdjecia) {
+    public void zmeczenieDuzaIloscRundAtakujacy() {
+        setSila(getSila() - 1);
+        setSzybkosc(getSzybkosc() - 1);
+    }
+
+    public void zmeczenieDuzaIloscRundOfiara() {
+        setWytrzymalosc(getWytrzymalosc() - 1);
+    }
+
+    public void powrotWyjsciowychParametrowPoZmniejszaniuZmeczeniemAtakujacy(Integer rundaWalki) {
+        Integer dodac = rundaWalki - 20;
+        setSila(getSila()+dodac);
+        setSzybkosc(getSzybkosc()+dodac);
+    }
+
+    public void powrotWyjsciowychParametrowPoZmniejszaniuZmeczeniemOfiara(Integer rundaWalki) {
+        Integer dodac = rundaWalki - 20;
+        setWytrzymalosc(getWytrzymalosc()+dodac);
+    }
+
+    public int doswiadczenieDoAtaku() {
+        int indexAtakuPlus;
+        if (getPunktyDoswiadczenia() < 50) {
+            indexAtakuPlus = 5;
+        } else if (50 <= getPunktyDoswiadczenia() && getPunktyDoswiadczenia() < 180) {
+            indexAtakuPlus = 10;
+        } else if (180 <= getPunktyDoswiadczenia()) {
+            indexAtakuPlus = 15;
+        } else {
+            indexAtakuPlus = 0;
+        }
+        return indexAtakuPlus;
+    }
+
+    public void licznikWygranychWalk(Istota zwyciezca) {
+        zwyciezca.setWygraneWalki(getWygraneWalki() + 1);
+    }
+
+    public void nowePunktyDoswiadczenia(Istota zwyciezca, Integer zwyciezcaPrzegranyRoznicaSila) {
+        if (zwyciezcaPrzegranyRoznicaSila >= 0) {
+            zwyciezca.setPunktyDoswiadczenia(getPunktyDoswiadczenia() + 10);
+        } else {
+            zwyciezca.setPunktyDoswiadczenia(getPunktyDoswiadczenia() + 30);
+        }
+    }
+
+    public void leczenieWyrownaniePunktowKorpoZycia(Istota zwyciezca) {
+        if (zwyciezca.getPunktyKorpoZycia() < 5) {
+            setPunktyKorpoZycia(getPunktyKorpoZycia() + 5);
+        } else if (5 <= zwyciezca.getPunktyKorpoZycia() && zwyciezca.getPunktyKorpoZycia() < 9) {
+            setPunktyKorpoZycia(getPunktyKorpoZycia() + 3);
+        } else {
+        }
+    }
+
+    public void zmniejszeniePunktowKorpoZycia(Integer punktyDoOdjecia) {
         setPunktyKorpoZycia(getPunktyKorpoZycia() - punktyDoOdjecia);
         if (getPunktyKorpoZycia() < 0) {
             setPunktyKorpoZycia(0);
@@ -69,15 +128,15 @@ public abstract class Istota implements FunkcjeIstoty {
         resetIloscUnikow();
     }
 
-    public Integer rezultatAtaku(Istota ofiara) {
-        Integer sumaPotencjalnychObrazen = (getSzybkosc() / 2) + getSila();
+    public Integer rezultatAtaku(Istota ofiara, Integer potencjalneObrazeniaZalezneOdRodzajuAtaku) {
+        Integer sumaPotencjalnychObrazen = getSila() + potencjalneObrazeniaZalezneOdRodzajuAtaku;
         Integer wynikAtaku = sumaPotencjalnychObrazen - ofiara.getWytrzymalosc();
         if (wynikAtaku > 0) {
-            ofiara.nowePunktyKorpoZycia(wynikAtaku);
+            ofiara.zmniejszeniePunktowKorpoZycia(wynikAtaku);
             System.out.println("Postaci " + getName() + " udało się zaatakować. Postać " + ofiara.getName() + " straciła "
                     + wynikAtaku + " punktów korpo życia i ma ich teraz " + ofiara.getPunktyKorpoZycia());
         } else {
-            System.out.println("Atak przeprowadzony przez " + getName() + "zakończył się niepowodzeniem");
+            System.out.println("Atak przeprowadzony przez " + getName() + " zakończył się niepowodzeniem ze względu na wytrzymałość " + ofiara.getName());
         }
         return wynikAtaku;
     }
@@ -87,11 +146,12 @@ public abstract class Istota implements FunkcjeIstoty {
         if (getIloscAtakow() != 0) {
             if (getSpryt() >= TworzeniePostaciService.losuj(3, 6)) {
                 System.out.println("Postać " + getName() + " będzie próbowała donieść na " + ofiara.getName());
-                ofiara.unik(this);
+                ofiara.unik(this, TworzeniePostaciService.losuj(RodzajeAtakowObrazniaEnum.DONIES.getMinWart(), RodzajeAtakowObrazniaEnum.DONIES.getMaxWart()));
                 redukcjaIloscAtakow();
             } else {
                 System.out.println("Postaci " + getName() + " nie udało się donieść na " + ofiara.getName() + " bo nie wykazała się wymaganym sprytem");
                 redukcjaIloscAtakow();
+                ofiara.redukcjaIloscUnikow();
             }
         } else {
             System.out.println("Postac " + getName() + " nie ma ataku");
@@ -103,11 +163,12 @@ public abstract class Istota implements FunkcjeIstoty {
         if (getIloscAtakow() != 0) {
             if (getSpryt() >= TworzeniePostaciService.losuj(4, 7)) {
                 System.out.println("Postać " + getName() + " będzie próbowała oblać kawą " + ofiara.getName());
-                ofiara.unik(this);
+                ofiara.unik(this, TworzeniePostaciService.losuj(RodzajeAtakowObrazniaEnum.OBLEJ_KAWA.getMinWart(), RodzajeAtakowObrazniaEnum.OBLEJ_KAWA.getMaxWart()));
                 redukcjaIloscAtakow();
             } else {
                 System.out.println("Postaci " + getName() + " nie udało się oblać kawą " + ofiara.getName() + " bo nie wykazała się wymaganym sprytem");
                 redukcjaIloscAtakow();
+                ofiara.redukcjaIloscUnikow();
             }
         } else {
             System.out.println("Postac " + getName() + " nie ma ataku");
@@ -115,15 +176,15 @@ public abstract class Istota implements FunkcjeIstoty {
     }
 
     @Override
-    public void unik(Istota atakujacy) {
+    public void unik(Istota atakujacy, Integer potencjalneObrazeniaZalezneOdRodzajuAtaku) {
         if (getIloscUnikow() != 0) {
-            if (getSzybkosc() >= TworzeniePostaciService.losuj(4, 8)) {
+            if (getSzybkosc() > atakujacy.getSzybkosc() || getSzybkosc() >= TworzeniePostaciService.losuj(4, 10)) {
                 System.out.println("Postaci " + getName() + " udało się uniknąć ataku ze strony " + atakujacy.getName());
                 redukcjaIloscUnikow();
             } else {
                 System.out.println("Postaci " + getName() + " nie udało się uniknąć ataktu ze strony " + atakujacy.getName());
                 redukcjaIloscUnikow();
-                atakujacy.rezultatAtaku(this);
+                atakujacy.rezultatAtaku(this, potencjalneObrazeniaZalezneOdRodzajuAtaku);
             }
         } else {
             System.out.println("Postać " + getName() + " nie ma uników");
