@@ -11,22 +11,28 @@ import java.util.List;
 
 public class WalkaService {
 
-    /*@Autowired
-    private TworzeniePostaciService tps;
-
     public List<Istota> korpoWinnerList = new ArrayList<>();
 
     public Istota globalKorpoWinner(List<Istota> korpoWinnerList) {
-        Istota globalnyWinner = korpoWinner(korpoWinnerList);
-        korpoWinnerList.removeAll(korpoWinnerList);
-        korpoWinnerList.add(globalnyWinner);
-        System.out.println("Postac " + globalnyWinner.getName() + " wygrala walkę o światową dominację w korporacji. Statystyki: punkty korpo życia: "
-                + globalnyWinner.getPunktyKorpoZycia() + " punkty doświadczenia: " + globalnyWinner.getPunktyDoswiadczenia() + " wygrane walki: " + globalnyWinner.getWygraneWalki() + " ilość ataków " + globalnyWinner.getIloscAtakow()
-                + " ilość uników " + globalnyWinner.getIloscUnikow());
-        return globalnyWinner;
+        if (korpoWinnerList.size() <= 1) {
+            Istota globalnyWinner = korpoWinnerList.get(0);
+            System.out.println("Postać " + globalnyWinner.getName() + " w globalnej walce o światową dominajcę w koporacji nie miała przeciwników i zwyciężyła bez wysiłku. Statystyki: punkty korpo życia: "
+                    + globalnyWinner.getPunktyKorpoZycia() + " punkty doświadczenia: " + globalnyWinner.getPunktyDoswiadczenia() + " wygrane walki: " + globalnyWinner.getWygraneWalki() + " ilość ataków " + globalnyWinner.getIloscAtakow()
+                    + " ilość uników " + globalnyWinner.getIloscUnikow());
+            return globalnyWinner;
+        } else {
+            Istota globalnyWinner = korpoWinner(korpoWinnerList);
+            korpoWinnerList.removeAll(korpoWinnerList);
+            korpoWinnerList.add(globalnyWinner);
+            System.out.println("Postać " + globalnyWinner.getName() + " wygrala walkę o światową dominację w korporacji. Statystyki: punkty korpo życia: "
+                    + globalnyWinner.getPunktyKorpoZycia() + " punkty doświadczenia: " + globalnyWinner.getPunktyDoswiadczenia() + " wygrane walki: " + globalnyWinner.getWygraneWalki() + " ilość ataków " + globalnyWinner.getIloscAtakow()
+                    + " ilość uników " + globalnyWinner.getIloscUnikow());
+            return globalnyWinner;
+        }
     }
 
-    public List<Istota> globalKorpoFight(Integer ileSezonow, Integer ileWalczakowSezon) {
+    public List<Istota> globalKorpoFight(TworzeniePostaciService tps, Integer ileSezonow, Integer ileWalczakowSezon) {
+        List<Istota> korpoWinnerList = new ArrayList<>();
         for (int i = 0; i < ileSezonow; i++) {
             List<Istota> listaWalczakow = tps.stworzWieleDowolnychPostaci(ileWalczakowSezon);
             Istota korpoZw = korpoWinner(listaWalczakow);
@@ -35,7 +41,7 @@ public class WalkaService {
         }
         System.out.println("Aktualna lista korporacyjnych szczurów zakwalifikowanych do globalnej walki o dominację w korporacji to: " + korpoWinnerList);
         return korpoWinnerList;
-    }*/
+    }
 
     public Istota korpoWinner(List<Istota> listaWalczakow) {
         Istota zwyciezca = walkaOstatniZywy(listaWalczakow);
@@ -76,18 +82,25 @@ public class WalkaService {
                 System.out.println("To jest " + rundaWalki + " runda walki");
                 rundaWalki(atakujacy, ofiara);
             } else {
-                System.out.println("To jest " + rundaWalki + " runda walki. Pracownicy są zmęczeni i z każdą kolejną rundą atakujący traci na sile i szybkości, a atakowany na wytrzymałości");
-                /*atakujacy.zmeczenieDuzaIloscRundAtakujacy();
-                ofiara.zmeczenieDuzaIloscRundOfiara();*/
-                rundaWalki(atakujacy, ofiara);
+                if (rundaWalki > 20 && rundaWalki <= 50) {
+                    System.out.println("To jest " + rundaWalki
+                            + " runda walki. Pracownicy są zmęczeni i z każdą kolejną rundą atakujący traci na szybkości, a atakowany na wytrzymałości");
+                    atakujacy.zmeczenieSzybkoscDuzaIloscRundAtakujacy();
+                    ofiara.zmeczenieWytrzymaloscDuzaIloscRundOfiara();
+                    rundaWalki(atakujacy, ofiara);
+                } else {
+                    System.out.println("To jest " + rundaWalki + " runda walki - decydująca i ostatnia. Pracownicy są padnięci i o wygranej zadecydują indywidualne umiejętności oraz szczęście");
+                    decydujacaRundaWalkiPunktySzczescie(atakujacy, ofiara);
+                }
             }
-            /*atakujacy.powrotWyjsciowychParametrowPoZmniejszaniuZmeczeniemAtakujacy(rundaWalki);
-            ofiara.powrotWyjsciowychParametrowPoZmniejszaniuZmeczeniemOfiara(rundaWalki);*/
         }
+
+        atakujacy.resetSzybkoscDuzaIloscRundAtakujacy();
+        ofiara.resetWytrzymaloscDuzaIloscRundOfiara();
 
         Istota zwyciezca = atakujacy.getPunktyKorpoZycia() > 0 ? atakujacy : ofiara;
         System.out.println("Zwycięzcą jest " + zwyciezca.getName() + " zwyciężając po " + rundaWalki + " rundach walki");
-        Istota przegrany = ofiara.getPunktyKorpoZycia() <= 0 ? atakujacy : ofiara;
+        Istota przegrany = ofiara.getPunktyKorpoZycia() <= 0 ? ofiara : atakujacy;
         Integer roznicaSila = zwyciezca.getSila() - przegrany.getSila();
 
         zwyciezca.nowePunktyDoswiadczenia(zwyciezca, roznicaSila);
@@ -120,5 +133,20 @@ public class WalkaService {
         }
         atakujacy.resetiloscAtakowUnikow();
         ofiara.resetiloscAtakowUnikow();
+    }
+
+    public void decydujacaRundaWalkiPunktySzczescie(Istota atakujacy, Istota ofiara) {
+        Integer resztkiMocyAtakujacego = atakujacy.getSila() + atakujacy.getSpryt();
+        Integer resztkiMocyOfiary = ofiara.getSila() + ofiara.getSpryt();
+        Integer roznicaResztekMocy = resztkiMocyAtakujacego - resztkiMocyOfiary;
+        Integer roznicaPunktowKorpoZycia = atakujacy.getPunktyKorpoZycia() - ofiara.getPunktyKorpoZycia();
+        Integer wynikOstateczny = roznicaResztekMocy - roznicaPunktowKorpoZycia + TworzeniePostaciService.losuj(-2, 2);
+        if (wynikOstateczny <= 0) {
+            atakujacy.zmniejszeniePunktowKorpoZycia(atakujacy.getPunktyKorpoZycia());
+            System.out.println("Postać " + ofiara.getName() + " pozbawiła korpo życia postać " + atakujacy.getName() + " w decydującej rundzie walki gdzie o wygranej decydowały indywidualne umiejętności i szczęście");
+        } else {
+            ofiara.zmniejszeniePunktowKorpoZycia(ofiara.getPunktyKorpoZycia());
+            System.out.println("Postać " + atakujacy.getName() + " pozbawiła korpo życia postać " + ofiara.getName() + " w decydującej rundzie walki gdzie o wygranej decydowały indywidualne umiejętności i szczęście");
+        }
     }
 }

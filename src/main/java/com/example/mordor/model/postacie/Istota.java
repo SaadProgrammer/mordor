@@ -36,6 +36,8 @@ public abstract class Istota implements FunkcjeIstoty {
     private Integer wygraneWalki = 0;
     private String idPostaci;
 
+    private Integer licznikSzybkosc = 0;
+    private Integer licznikWytrzymalosc = 0;
 
     @Override
     public String toString() {
@@ -45,24 +47,28 @@ public abstract class Istota implements FunkcjeIstoty {
                 + " IdPostaci: " + getIdPostaci();
     }
 
-    public void zmeczenieDuzaIloscRundAtakujacy() {
-        setSila(getSila() - 1);
-        setSzybkosc(getSzybkosc() - 1);
+    public void zmeczenieSzybkoscDuzaIloscRundAtakujacy() {
+        if (getSzybkosc() > 0) {
+            setSzybkosc(getSzybkosc() - 1);
+            setLicznikSzybkosc(getLicznikSzybkosc() + 1);
+        }
     }
 
-    public void zmeczenieDuzaIloscRundOfiara() {
-        setWytrzymalosc(getWytrzymalosc() - 1);
+    public void zmeczenieWytrzymaloscDuzaIloscRundOfiara() {
+        if (getWytrzymalosc() > 0) {
+            setWytrzymalosc(getWytrzymalosc() - 1);
+            setLicznikWytrzymalosc(getWytrzymalosc() + 1);
+        }
     }
 
-    public void powrotWyjsciowychParametrowPoZmniejszaniuZmeczeniemAtakujacy(Integer rundaWalki) {
-        Integer dodac = rundaWalki - 20;
-        setSila(getSila()+dodac);
-        setSzybkosc(getSzybkosc()+dodac);
+    public void resetSzybkoscDuzaIloscRundAtakujacy() {
+        setSzybkosc(getSzybkosc() + getLicznikSzybkosc());
+        setLicznikSzybkosc(0);
     }
 
-    public void powrotWyjsciowychParametrowPoZmniejszaniuZmeczeniemOfiara(Integer rundaWalki) {
-        Integer dodac = rundaWalki - 20;
-        setWytrzymalosc(getWytrzymalosc()+dodac);
+    public void resetWytrzymaloscDuzaIloscRundOfiara() {
+        setWytrzymalosc(getWytrzymalosc() + getLicznikWytrzymalosc());
+        setLicznikWytrzymalosc(0);
     }
 
     public int doswiadczenieDoAtaku() {
