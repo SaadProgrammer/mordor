@@ -1,6 +1,7 @@
 package com.example.mordor.service;
 
 import com.example.mordor.model.postacie.Istota;
+import com.example.mordor.model.postacie.TypPostaciEnum;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -8,6 +9,47 @@ import org.junit.Test;
 import java.util.List;
 
 public class WalkaServiceTest {
+
+    @Test
+    public void funkcjaSprawdzaDodanieWybranejPostaciDoKorpoWinnerList() {
+        //given
+        TworzeniePostaciService tps = new TworzeniePostaciService();
+        WalkaService ws = new WalkaService();
+        TypPostaciEnum typDodawanejPostaci = TypPostaciEnum.RECEPCJONISTKA;
+        //when
+        ws.dodajPostacDoKorpoWinnerList(tps,typDodawanejPostaci, ws.korpoWinnerList);
+        //then
+        Assert.assertTrue(ws.korpoWinnerList.size()==1);
+        Assert.assertTrue(ws.korpoWinnerList.get(0).getTypPostaci().equals(typDodawanejPostaci));
+    }
+
+    @Test
+    public void funkcjaSprawdzaUsuwanieWybranejPostaciZKorpoWinnerList() {
+        //given
+        TworzeniePostaciService tps = new TworzeniePostaciService();
+        WalkaService ws = new WalkaService();
+        List<Istota> lista = tps.stworzWieleDowolnychPostaci(4);
+        String idPostaciUsuwanej = lista.get(0).getIdPostaci();
+        Istota postacUsuwana = lista.get(0);
+        ws.korpoWinnerList.addAll(lista);
+        //when
+        ws.usunWybranaPostacZKorpoWinnerList(idPostaciUsuwanej, ws.korpoWinnerList);
+        //then
+        Assert.assertFalse(ws.korpoWinnerList.contains(postacUsuwana));
+    }
+
+    @Test
+    public void funkcjaSprawdzaCzyszczenieKorpoWinnerList() {
+        //given
+        TworzeniePostaciService tps = new TworzeniePostaciService();
+        WalkaService ws = new WalkaService();
+        List<Istota> lista = tps.stworzWieleDowolnychPostaci(4);
+        ws.korpoWinnerList.addAll(lista);
+        //when
+        ws.usunWszystkichZKorpoWinnerList(ws.korpoWinnerList);
+        //then
+        Assert.assertTrue(ws.korpoWinnerList.isEmpty());
+    }
 
     @Test
     public void funkcjaSprawdzaCzyGlobalKorpoWinnerCzysciKorpoWinnerList() {
@@ -115,7 +157,7 @@ public class WalkaServiceTest {
         Assert.assertTrue(zwyciezca.getPunktyKorpoZycia() >= 8);
         Assert.assertTrue(zwyciezca.getPunktyDoswiadczenia() >= 10);
         Assert.assertTrue(zwyciezca.getWygraneWalki() >= 1);
-        Assert.assertTrue(zwyciezca.getWygraneWalki()>=1);
+        Assert.assertTrue(zwyciezca.getWygraneWalki() >= 1);
     }
 
     @Test

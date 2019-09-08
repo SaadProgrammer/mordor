@@ -1,6 +1,7 @@
 package com.example.mordor.service;
 
 import com.example.mordor.model.postacie.Istota;
+import com.example.mordor.model.postacie.TypPostaciEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,27 @@ import java.util.List;
 public class WalkaService {
 
     public List<Istota> korpoWinnerList = new ArrayList<>();
+
+    public void dodajPostacDoKorpoWinnerList(TworzeniePostaciService tps, TypPostaciEnum typWybranejPostaci, List<Istota> korpoWinnerList) {
+        Istota wybranaPostac = tps.stworzPostac(typWybranejPostaci);
+        korpoWinnerList.add(wybranaPostac);
+        System.out.println("Postać " + wybranaPostac.getName() + " została dodana do listy korporacyjnych szczórów zakwalifikowanych do globalnej walki o dominację w korporacji");
+    }
+
+    public void usunWybranaPostacZKorpoWinnerList(String idPostaci, List<Istota> korpoWinnerList) {
+        for (int i = 0; i < korpoWinnerList.size(); i++) {
+            if (korpoWinnerList.get(i).getIdPostaci().equals(idPostaci)) {
+                Istota usunPostac = korpoWinnerList.get(i);
+                korpoWinnerList.remove(usunPostac);
+                System.out.println("Postać " + usunPostac.getName() + " została usunięta z listy korporacyjnych szczórów zakwalifikowanych do globalnej walki o dominację w korporacji");
+            }
+        }
+    }
+
+    public void usunWszystkichZKorpoWinnerList(List<Istota> korpoWinnerList) {
+        korpoWinnerList.removeAll(korpoWinnerList);
+        System.out.println("Aktualna lista korporacyjnych szczurów zakwalifikowanych do globalnej walki o dominację w korporacji jest pusta");
+    }
 
     public Istota globalKorpoWinner(List<Istota> korpoWinnerList) {
         if (korpoWinnerList.size() <= 1) {
